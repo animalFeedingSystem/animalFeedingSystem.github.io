@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Final year project| homepage</title>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <noscript
+      ><link rel="stylesheet" href="assets/css/noscript.css"
+    /></noscript>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  </head>
+  <body class="is-preload">
+    <!-- Wrapper -->
+    <div id="wrapper" style="background-color: blueviolet">
+      <!-- Header -->
+      <header id="header">
+        <div class="logo">
+          <span class="icon fa-gem"></span>
+        </div>
+        <div class="content">
+          <div class="inner">
+            <h1>FINAL YEAR PROJECT</h1>
+            <h4>Automated animal feeding and Management.</h4>
+            <p>
+              <i
+                >Mayanja Derrick 2020/EEE/062/ps<br />Natukwasa Benard
+                2020/EEE/087/ps
+              </i>
+            </p>
+          </div>
+        </div>
+        <nav>
+          <ul>
+            <li><a href="#status">Status</a></li>
+            <li><a href="#settings">Setting</a></li>
+            <li><a href="#foodRecords"> Food </a></li>
+			<li><a href="#waterRecords"> Water </a></li>
+          </ul>
+        </nav>
+      </header>
+
+      <!-- Main -->
+      <div id="main">
+        <!-- Intro -->
+        <article id="status">
+          <h2 class="major">STATUS</h2>
+          <span class="image main"><img src="images/pic01.jpg" alt="" /></span>
+          <h4>MOTOR 1( Running Food)</h4>
+          <p><b>STATUS:</b> <span id="field1"></span></p>
+          <p><b>CURRENT WEIGHT:</b> <span id="field3"></span></p>
+
+          <h4>MOTOR 2( Running Water)</h4>
+          <p><b>STATUS:</b> <span id="field2"></span></p>
+          <p><b>CURRENT LEVEL:</b> <span id="field4"></span></p>
+
+          <h4>TODAY'S ACCUMULATED PARAMETERS</h4>
+          <p><b>ACCUMULATED WEIGHT(KGS):</b> <span id="feeds">to do</span></p>
+          <p><b>ACCUMULATED WATER(LTRS):</b> <span id="water">to do</span></p>
+        </article>
+
+        <!-- Work -->
+        <article id="foodRecords">
+          <h2 class="major">FOOD INTAKE RECORDS</h2>
+          <span class="image main"><img src="images/pic02.jpg" alt="" /></span>
+          <h4>Tables Of Feed Records.</h4>
+
+          <table id="dataFood" border="2">
+            <thead>
+              <tr>
+                <th>Fill Time</th>
+                <th>Weight added(g)</th>
+                <th>Consunption Time (s)</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+        </article>
+
+
+		<article id="waterRecords">
+			<h2 class="major">WATER INTAKE RECORDS</h2>
+			<span class="image main"><img src="images/pic02.jpg" alt="" /></span>
+  
+			<h4>Tables Of water Records.</h4>
+  
+			<table id="dataWater" border="2">
+			  <thead>
+				<tr>
+				  <th>Fill Time</th>
+				  <th>Liters added(cm^3)</th>
+				  <th>Consunption Time (s)</th>
+				</tr>
+			  </thead>
+			  <tbody></tbody>
+			</table>
+		  </article>
+
+        <!-- Contact -->
+        <article id="settings">
+          <h2 class="major">SETTINGS</h2>
+
+          <h4 class="major">EXISTING SETTINGS SETTINGS</h4>
+          <p>
+            <b>Number of animals in a paddock :</b> <span id="field11"></span>
+          </p>
+          <p><b>Feeding method:</b> <span id="field12"></span></p>
+          <p>
+            <b>Maximum daily feeds weight(g):</b> <span id="field13"></span>
+          </p>
+
+          <h2 class="major">ENTER NEW SETTINGS</h2>
+          <form id="dataForm">
+            <div class="fields">
+              <div class="field half">
+                <label for="animals">Number of Animals In the house:</label>
+                <input
+                  type="number"
+                  name="animals"
+                  id="animals"
+                  required
+                  style="color: black"
+                />
+              </div>
+
+              <div class="field half">
+                <label for="methods">Choose the method of feeding:</label>
+                <select name="methods" id="methods">
+                  <option value="1">1: Fill on finish</option>
+                  <option value="2">
+                    2: Set the maximum daily feeds quatinty
+                  </option>
+                </select>
+              </div>
+              <div class="field half">
+                <label for="kgs">Set maximum kgs per day:</label>
+                <input
+                  type="number"
+                  id="kgs"
+                  name="kgs"
+                  required
+                  style="color: black"
+                />
+              </div>
+            </div>
+            <ul class="actions">
+              <li><button type="submit" value="Submit">Submit</button></li>
+              <li><input type="reset" value="Reset" /></li>
+            </ul>
+          </form>
+        </article>
+      </div>
+
+      <!-- Footer -->
+      <footer id="footer">
+        <p class="copyright">&copy; 2023-2024 Academic Year</p>
+      </footer>
+    </div>
+
+    <!-- BG -->
+    <div id="bg"></div>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/browser.min.js"></script>
+    <script src="assets/js/breakpoints.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        // ThingSpeak Channel ID and API Key
+        var channelID = 2498323;
+        var apiKey = "AGF1F3WRSUZPEJAQ";
+        var field1Element = $("#field1");
+        var field2Element = $("#field2");
+        var field3Element = $("#field3");
+        var field4Element = $("#field4");
+        // Function to fetch data from ThingSpeak and update HTML elements
+        function fetchDataAndUpdate() {
+          // URL to fetch data from ThingSpeak
+          var url =
+            "https://api.thingspeak.com/channels/" +
+            channelID +
+            "/feeds.json?api_key=" +
+            apiKey +
+            "&results=1";
+
+          // Fetch data from ThingSpeak
+          $.getJSON(url, function (data) {
+            // Extracting field values from the response
+            var field1Value = data.feeds[0].field1;
+            var field2Value = data.feeds[0].field2;
+            var field3Value = data.feeds[0].field3;
+            var field4Value = data.feeds[0].field4;
+
+			if(field1Value==="1"){
+				field1Value="Motor Runing and Open";
+				var color="red";
+			} else {
+				field1Value="Motor stationary and closed";
+				var color="green";
+			}
+
+			
+			if(field2Value==="1"){
+				field2Value="Motor Runing and Open";
+				var color1="red";
+			} else {
+				field2Value="Motor stationary and closed";
+				var color1="green";
+			}
+
+            // Updating HTML elements with field values
+            field1Element.text(field1Value);
+            field2Element.text(field2Value);
+            field3Element.text(field3Value);
+            field4Element.text(field4Value);
+
+			document.getElementById("field1").style.backgroundColor=color;
+			document.getElementById("field2").style.backgroundColor=color1;
+          });
+        }
+
+        // Fetch data and update every second
+        fetchDataAndUpdate();
+        setInterval(fetchDataAndUpdate, 1000);
+      });
+    </script>
+
+    <script>
+      $(document).ready(function () {
+        var url =
+          "https://api.thingspeak.com/channels/2492510/fields/1.json?api_key=TCH6191M1R9K87RQ&results=5000&sort=asc";
+
+        $.getJSON(url, function (data) {
+          var dataFood = $("#dataFood tbody");
+          $.each(data.feeds, function (index, feed) {
+            var timestamp = new Date(feed.created_at);
+            var value = feed.field1; // Access the field value using field name
+
+            // Calculate time interval (in seconds) for the next result
+            var nextIndex = index + 1;
+            var nextTimestamp =
+              nextIndex < data.feeds.length
+                ? new Date(data.feeds[nextIndex].created_at)
+                : timestamp;
+            var timeInterval = (nextTimestamp - timestamp) / 1000;
+
+            // Display timestamp, value, and time interval in the table
+            dataFood.append(
+              "<tr><td>" +
+                timestamp.toLocaleString() +
+                "</td><td>" +
+                value +
+                "</td><td>" +
+                timeInterval +
+                "</td></tr>"
+            );
+          });
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+          console.error("Error fetching data:", textStatus, errorThrown);
+        });
+      });
+    </script>
+
+    <script>
+      $(document).ready(function () {
+        var url =
+          "https://api.thingspeak.com/channels/2498321/fields/1.json?api_key=ZXACN6SYSVVGRCPC&results=5000&sort=asc";
+
+        $.getJSON(url, function (data) {
+          var dataWater = $("#dataWater tbody");
+          $.each(data.feeds, function (index, feed) {
+            var timestamp = new Date(feed.created_at);
+            var value = feed.field1; // Access the field value using field name
+
+            // Calculate time interval (in seconds) for the next result
+            var nextIndex = index + 1;
+            var nextTimestamp =
+              nextIndex < data.feeds.length
+                ? new Date(data.feeds[nextIndex].created_at)
+                : timestamp;
+            var timeInterval = (nextTimestamp - timestamp) / 1000;
+
+            // Display timestamp, value, and time interval in the table
+            dataWater.append(
+              "<tr><td>" +
+                timestamp.toLocaleString() +
+                "</td><td>" +
+                value +
+                "</td><td>" +
+                timeInterval +
+                "</td></tr>"
+            );
+          });
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+          console.error("Error fetching data:", textStatus, errorThrown);
+        });
+      });
+    </script>
+
+    <script>
+      $(document).ready(function () {
+        $("#dataForm").submit(function (event) {
+          event.preventDefault(); // Prevent form submission
+
+          // Get form data
+          var formData = {
+            field1: $("#animals").val(),
+            field2: $("#methods").val(),
+            field3: $("#kgs").val(),
+          };
+
+          // Upload data to ThingSpeak
+          uploadToThingSpeak(formData);
+        });
+
+        function uploadToThingSpeak(formData) {
+          var channelID = 2498318;
+          var writeAPIKey = "EIINWR1KSG82WGJR";
+          var url = "https://api.thingspeak.com/update.json";
+
+          // Append API key and field values to form data
+          formData["api_key"] = writeAPIKey;
+
+          // Send POST request to ThingSpeak
+          $.ajax({
+            type: "POST",
+            url: url,
+            data: formData,
+            success: function (response) {
+              console.log("Data uploaded to ThingSpeak:", response);
+              alert("Data uploaded to ThingSpeak successfully!");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+              console.error(
+                "Error uploading data to ThingSpeak:",
+                textStatus,
+                errorThrown
+              );
+              alert(
+                "Error uploading data to ThingSpeak. Please try again later."
+              );
+            },
+          });
+        }
+      });
+    </script>
+
+    <script>
+      $(document).ready(function () {
+        // ThingSpeak Channel ID and API Key
+        var channelID = 2498318;
+        var apiKey = "4TKFND9L0YRQYHA4";
+
+        var field1Element = $("#field11");
+        var field2Element = $("#field12");
+        var field3Element = $("#field13");
+
+        // Function to fetch data from ThingSpeak and update HTML elements
+        function fetchDataAndUpdate() {
+          // URL to fetch data from ThingSpeak
+          var url =
+            "https://api.thingspeak.com/channels/" +
+            channelID +
+            "/feeds.json?api_key=" +
+            apiKey +
+            "&results=1";
+
+          // Fetch data from ThingSpeak
+          $.getJSON(url, function (data) {
+            // Extracting field values from the response
+            var field1Value = data.feeds[0].field1;
+            var field2Value = data.feeds[0].field2;
+            var field3Value = data.feeds[0].field3;
+            // Updating HTML elements with field values
+            field1Element.text(field1Value);
+            field2Element.text(field2Value);
+            field3Element.text(field3Value);
+          });
+        }
+
+        // Fetch data and update every second
+        fetchDataAndUpdate();
+        setInterval(fetchDataAndUpdate, 1000);
+      });
+    </script>
+  </body>
+</html>
